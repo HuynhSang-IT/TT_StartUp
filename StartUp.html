@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lean Startup - Presentation Master</title>
+    <style>
+        /* --- CẤU HÌNH CHUNG --- */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Open+Sans:wght@300;400;600&display=swap');
+
+        :root {
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --primary: #3b82f6;
+            --accent: #f97316;
+            --text-main: #334155;
+            --text-white: #f1f5f9;
+        }
+
+        html { scroll-behavior: smooth; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-dark);
+            scroll-snap-type: y mandatory; 
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        /* --- THANH TIẾN TRÌNH --- */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            width: 0%; z-index: 9999; transition: width 0.3s ease-out;
+        }
+
+        /* --- BỐ CỤC SLIDE --- */
+        section {
+            height: 100vh; width: 100%; scroll-snap-align: start;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; overflow: hidden; padding: 1rem 5%;
+            background: var(--bg-light);
+        }
+
+        .part-label {
+            display: block; font-family: 'Montserrat', sans-serif; font-size: 0.9rem;
+            font-weight: 700; color: var(--accent); text-transform: uppercase;
+            letter-spacing: 2px; margin-bottom: 1rem;
+        }
+        section.dark-mode .part-label { color: var(--accent); }
+
+        /* Nút NEXT */
+        .next-btn {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            font-size: 2rem; color: var(--accent); text-decoration: none; cursor: pointer;
+            z-index: 100; animation: bounce 2s infinite; border: 2px solid transparent;
+            border-radius: 50%; width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1);
+        }
+        .next-btn:hover { background: var(--accent); color: white; }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+            40% {transform: translateX(-50%) translateY(-10px);}
+            60% {transform: translateX(-50%) translateY(-5px);}
+        }
+
+        section.dark-mode { background: var(--bg-dark); color: var(--text-white); }
+        section.dark-mode h2, section.dark-mode h3 { color: var(--text-white); }
+        section.dark-mode .next-btn { color: white; border-color: rgba(255,255,255,0.2); }
+
+        .container {
+            max-width: 1200px; width: 100%; display: grid;
+            grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+            max-height: 90vh;
+        }
+        .container.center { grid-template-columns: 1fr; text-align: center; max-width: 900px; }
+
+        h1 { font-family: 'Montserrat', sans-serif; font-size: 4rem; line-height: 1.1; margin-bottom: 0.5rem; }
+        h2 { font-family: 'Montserrat', sans-serif; font-size: 2.5rem; margin-bottom: 1rem; color: var(--bg-dark); }
+        h3 { font-family: 'Montserrat', sans-serif; font-size: 1.3rem; color: var(--primary); margin-bottom: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        p { font-size: 1.1rem; line-height: 1.5; margin-bottom: 1rem; }
+        ul li { font-size: 1.1rem; margin-bottom: 0.8rem; padding-left: 1.5rem; position: relative; list-style: none; }
+        ul li::before { content: "•"; color: var(--accent); font-size: 2rem; position: absolute; left: 0; top: -8px; }
+
+        img { width: 100%; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); max-height: 80vh; object-fit: cover;}
+        .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: var(--text-main); }
+
+        .compare-table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; font-size: 1rem; }
+        .compare-table th { background: var(--primary); color: white; padding: 12px; text-align: left; }
+        .compare-table td { border-bottom: 1px solid #e2e8f0; padding: 12px; background: white; vertical-align: top;}
+        .quiz-cell { background-color: #f1f5f9 !important; color: #94a3b8; text-align: center; font-weight: bold; font-size: 1.5rem; letter-spacing: 5px; }
+        #slide-3 .text, #slide-3b .text { overflow-y: auto; max-height: 85vh; padding-right: 10px; }
+
+        #slide-1 { background: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)), url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'); background-size: cover; background-position: center; }
+
+        .cycle-box { border: 4px dashed var(--accent); border-radius: 50%; width: 350px; height: 350px; display: flex; align-items: center; justify-content: center; margin: 0 auto; position: relative; animation: spin-slow 30s linear infinite; }
+        .cycle-item { position: absolute; background: var(--bg-dark); color: white; padding: 8px 16px; font-weight: bold; border-radius: 20px; font-size: 0.9rem; }
+        .c-build { top: -15px; } .c-measure { bottom: 40px; right: -25px; } .c-learn { bottom: 40px; left: -25px; }
+        @keyframes spin-slow { 100% { transform: rotate(360deg); } }
+        .hl { color: var(--accent); font-weight: bold; }
+        .box-highlight { border-left: 5px solid var(--accent); padding-left: 15px; background: rgba(249, 115, 22, 0.1); padding: 15px; border-radius: 0 10px 10px 0; }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr !important; gap: 1.5rem; text-align: center; }
+            h1 { font-size: 2.5rem; } h2 { font-size: 1.8rem; }
+            section { padding: 3rem 1rem; } .next-btn { display: none; }
+            img { max-height: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <section id="slide-1" class="dark-mode">
+        <div class="container center">
+            <span class="part-label">PHẦN 1: MỞ ĐẦU & BỐI CẢNH</span>
+            <h3>Nhóm thuyết trình: Trần Huỳnh Sang - Nguyễn Văn Hoài - Trần Huỳnh Hoa Giáp</h3>
+            <h1>LEAN <span>STARTUP</span></h1>
+            <p style="font-size: 1.4rem;">Tại sao 90% Startup thất bại &<br>Cách để bạn thuộc về 10% còn lại?</p>
+        </div>
+        <a href="#slide-2" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-2">
+        <div class="container">
+            <div class="text">
+                <span class="part-label">PHẦN 1: MỞ ĐẦU & BỐI CẢNH</span>
+                <h2>Cội nguồn tư duy</h2>
+                <p><strong>Tác giả:</strong> Eric Ries.</p>
+                <p>Thất bại từ dự án IMVU: 6 tháng code ròng rã nhưng không ai dùng.</p>
+                <div class="box-highlight">
+                    <p><strong>Cảm hứng:</strong> Lean Manufacturing (Toyota).</p>
+                    <p><strong>Cốt lõi:</strong> Loại bỏ lãng phí (Waste).</p>
+                    <p><em>"Lãng phí lớn nhất là làm ra sản phẩm thừa một cách hiệu quả."</em></p>
+                </div>
+            </div>
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Book">
+            </div>
+        </div>
+        <a href="#slide-3" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-3">
+        <div class="container">
+            <div class="text">
+                <span class="part-label">PHẦN 2: TƯ DUY - SỰ KHÁC BIỆT</span>
+                <h2>Thử thách tư duy</h2>
+                <p>Lean Startup khác gì truyền thống?</p>
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Đặc điểm</th>
+                            <th>Truyền thống 🚀</th>
+                            <th>Lean Startup 🚗</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Chiến lược</strong></td>
+                            <td>Kế hoạch (Business Plan)</td>
+                            <td class="quiz-cell">???</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quy trình</strong></td>
+                            <td>Thực thi tuần tự</td>
+                            <td class="quiz-cell">???</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rủi ro</strong></td>
+                            <td>Nổ tung nếu sai</td>
+                            <td class="quiz-cell">???</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1512314889357-e157c22f938d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Thinking">
+            </div>
+        </div>
+        <a href="#slide-3b" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-3b">
+        <div class="container">
+            <div class="text">
+                <span class="part-label">PHẦN 2: TƯ DUY - SỰ KHÁC BIỆT</span>
+                <h2>Đáp án: Sự đối lập</h2>
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Đặc điểm</th>
+                            <th>Truyền thống 🚀</th>
+                            <th>Lean Startup 🚗</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Chiến lược</strong></td>
+                            <td>Kế hoạch (Business Plan)</td>
+                            <td class="hl">Mô hình (Business Model)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quy trình</strong></td>
+                            <td>Thực thi tuần tự</td>
+                            <td class="hl">Vòng lặp (Thử - Sai - Sửa)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rủi ro</strong></td>
+                            <td>Nổ tung nếu sai</td>
+                            <td class="hl">Sai nhanh, sửa rẻ</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Chart">
+            </div>
+        </div>
+        <a href="#slide-4" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-4" class="dark-mode" style="background-color: #f97316;">
+        <div class="container center">
+            <span class="part-label" style="color: white;">PHẦN 2: TƯ DUY - SỰ KHÁC BIỆT</span>
+            <h1 style="font-size: 8rem;">?</h1>
+            <h2>Câu hỏi tương tác</h2>
+            <p style="font-size: 2rem; font-weight: bold; line-height: 1.5;">"Quán trà sữa mở trước cổng trường<br>là Startup hay SME (Doanh nghiệp nhỏ)?"</p>
+            <br>
+            <p style="font-style: italic; opacity: 0.8;">(Mời các bạn giơ tay phát biểu)</p>
+        </div>
+        <a href="#slide-4b" class="next-btn" style="color: white; border-color: white;">▼</a>
+    </section>
+
+    <section id="slide-4b" class="dark-mode">
+        <div class="container">
+            <div class="text">
+                <span class="part-label">GIẢI ĐÁP TÌNH HUỐNG</span>
+                <h2>Đáp án: Đó là SME!</h2>
+                <div class="card" style="color: #333;">
+                    <h3 style="color: var(--accent);">Tại sao không phải Startup?</h3>
+                    <p>Vì mô hình "bán trà sữa" đã quá rõ ràng:</p>
+                    <ul>
+                        <li>Khách hàng là ai? (Sinh viên) -> Biết rồi.</li>
+                        <li>Sản phẩm là gì? (Trà sữa) -> Biết rồi.</li>
+                        <li>Cách kiếm tiền? (Bán ly lấy tiền) -> Biết rồi.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="image">
+                <div class="card" style="background: var(--primary); color: white; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <h3>Vậy Startup là gì?</h3>
+                    <p style="font-size: 1.3rem; margin-top: 20px;">Startup là tổ chức được thiết kế để tạo ra sản phẩm mới trong điều kiện <strong>CỰC KỲ KHÔNG CHẮC CHẮN</strong>.</p>
+                </div>
+            </div>
+        </div>
+        <a href="#slide-5" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-5" class="dark-mode">
+        <div class="container">
+            <div class="image">
+                <div class="cycle-box">
+                    <div class="cycle-item c-build">BUILD</div>
+                    <div class="cycle-item c-measure">MEASURE</div>
+                    <div class="cycle-item c-learn">LEARN</div>
+                    <h3 style="color: white; z-index: 10;">THE LOOP</h3>
+                </div>
+            </div>
+            <div class="text">
+                <span class="part-label" style="color: var(--accent);">PHẦN 3: ĐỘNG CƠ TĂNG TRƯỞNG</span>
+                <h2>Trái tim của Lean Startup</h2>
+                <ul>
+                    <li><strong>Build (Xây):</strong> Tạo MVP nhanh nhất.</li>
+                    <li><strong>Measure (Đo):</strong> Lấy dữ liệu thực tế.</li>
+                    <li><strong>Learn (Học):</strong> Đi tiếp hay đổi hướng?</li>
+                </ul>
+                <div class="box-highlight" style="background: rgba(255,255,255,0.1); border-left-color: var(--primary);">
+                    <p class="hl" style="color: var(--primary);">💡 Tư duy ngược:</p>
+                    <p>Bắt đầu từ: <strong>"Tôi muốn HỌC cái gì?"</strong> -> Rồi mới quyết định xây cái gì để đo được điều đó.</p>
+                </div>
+            </div>
+        </div>
+        <a href="#slide-6" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-6">
+        <div class="container">
+            <div class="text">
+                <span class="part-label">PHẦN 3: ĐỘNG CƠ TĂNG TRƯỞNG</span>
+                <h2>Khoa học khởi nghiệp</h2>
+                <h3>Mọi ý tưởng chỉ là Giả Thuyết</h3>
+                <br>
+                <div class="card" style="background: #e0f2fe;">
+                    <p><strong>1. Giả thuyết Giá trị:</strong></p>
+                    <p>Khách hàng có cần nó không?</p>
+                </div>
+                <br>
+                <div class="card" style="background: #ffedd5;">
+                    <p><strong>2. Giả thuyết Tăng trưởng:</strong></p>
+                    <p>Làm sao để sản phẩm tự lan truyền?</p>
+                </div>
+            </div>
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Experiment">
+            </div>
+        </div>
+        <a href="#slide-7" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-7">
+        <div class="container">
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Prototype Planning">
+            </div>
+            <div class="text">
+                <span class="part-label">PHẦN 4: MVP & THỰC THI</span>
+                <h2>MVP - Minimum Viable Product</h2>
+                <p>Là phiên bản <strong>nhỏ nhất</strong>, tốn <strong>ít công sức nhất</strong> để bắt đầu học hỏi.</p>
+                <div class="box-highlight">
+                    <p><strong>MVP đúng:</strong> Ván trượt (chạy được ngay) -> Xe đạp -> Xe máy -> Ô tô.</p>
+                    <p><em>Mục tiêu là học, không phải kiếm tiền ngay.</em></p>
+                </div>
+            </div>
+        </div>
+        <a href="#slide-8" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-8" class="dark-mode">
+        <div class="container">
+            <div class="text">
+                <span class="part-label">PHẦN 4: MVP & THỰC THI</span>
+                <h2>Case Study Kinh Điển</h2>
+                <br>
+                <h3>📦 Dropbox</h3>
+                <p>Làm video giả lập 3 phút -> 75k đăng ký.</p>
+                <br>
+                <h3>👟 Zappos</h3>
+                <p>Chụp ảnh giày ở tiệm, đăng lên bán, chạy ra tiệm mua gửi khách -> Kiểm chứng nhu cầu mua giày online.</p>
+            </div>
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Success">
+            </div>
+        </div>
+        <a href="#slide-9" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-9">
+        <div class="container">
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Shopping">
+            </div>
+            <div class="text">
+                <span class="part-label">PHẦN 4: MVP & THỰC THI</span>
+                <h2>Food on the Table</h2>
+                <h3>Làm thủ công (Concierge MVP)</h3>
+                <p>Founder đến tận nhà 1 khách, tự lên thực đơn, tự đi chợ.</p>
+                <p class="hl">Bài học: "Do things that don't scale" (Làm thủ công trước khi tự động hóa).</p>
+            </div>
+        </div>
+        <a href="#slide-10" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-10" style="background: #fff7ed;">
+        <div class="container">
+            <div class="text">
+                <span class="part-label">PHẦN 4: MVP & THỰC THI</span>
+                <h2>Demo: Startup trong 2 giờ</h2>
+                <h3>Idea: Dịch vụ dọn trọ sinh viên</h3>
+                <ul>
+                    <li><strong>B1:</strong> Lập Fanpage "Dọn trọ siêu tốc".</li>
+                    <li><strong>B2:</strong> Design bảng giá Canva.</li>
+                    <li><strong>B3:</strong> Spam Group Confession.</li>
+                    <li><strong>B4:</strong> Đếm Inbox.</li>
+                </ul>
+            </div>
+            <div class="image">
+                <div class="card" style="text-align: center;">
+                    <h3>KẾT QUẢ</h3>
+                    <h1 style="color: var(--primary);">20 Inbox</h1>
+                    <p>-> Có nhu cầu thật!</p>
+                    <p>-> Tự xách chổi đi dọn.</p>
+                    <p><strong>-> KHÔNG CẦN VIẾT APP!</strong></p>
+                </div>
+            </div>
+        </div>
+        <a href="#slide-11" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-11" style="background: #1e293b; color: white;">
+        <div class="container">
+            <div class="image">
+                <img src="https://images.unsplash.com/photo-1608245449230-4ac19066d2d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Basketball Action" style="border: 4px solid var(--accent);">
+            </div>
+            <div class="text">
+                <span class="part-label" style="color: var(--accent);">PHẦN 5: CHUYỂN HƯỚNG (PIVOT)</span>
+                
+                <div style="border-left: 8px solid var(--accent); padding-left: 30px;">
+                    <h1 style="font-size: 5rem; color: #ef4444; margin-bottom: 0;">PIVOT</h1>
+                    <h1 style="font-size: 5rem; color: white;">≠ THẤT BẠI</h1>
+                </div>
+                <br>
+                <p style="font-size: 2rem; line-height: 1.4;">
+                    "Pivot = Thay đổi <strong>chiến lược</strong>,<br> giữ nguyên <strong>tầm nhìn</strong>."
+                </p>
+                <br>
+                <p style="opacity: 0.8;">(Giống như cầu thủ bóng rổ: Một chân giữ nguyên, chân kia xoay tìm đường chuyền mới).</p>
+            </div>
+        </div>
+        <a href="#slide-11b" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-11b" style="background-color: #f8fafc;">
+        <div class="container" style="max-width: 1400px; height: 90vh;"> 
+            <div class="text" style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                <span class="part-label" style="text-align: center; margin-bottom: 20px;">PHẦN 5: CHUYỂN HƯỚNG (PIVOT)</span>
+                <h2 style="text-align: center; margin-bottom: 30px;">Các loại Pivot Nâng cao</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; flex-grow: 1; margin-bottom: 40px;">
+                    
+                    <div class="card" style="border-top: 8px solid var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+                        <h3 style="font-size: 5rem; margin-bottom: 1rem;">🔍</h3>
+                        <h3 style="color: var(--primary); font-size: 2.5rem; text-transform: uppercase;">Zoom-in Pivot</h3>
+                        <p style="font-size: 1.5rem; font-style: italic; color: #64748b; margin-bottom: 2rem;">"Bé xé ra to"</p>
+                        
+                        <div style="background: #eff6ff; padding: 20px; border-radius: 10px; width: 100%;">
+                            <p style="font-size: 1.2rem;"><strong>Cơ chế:</strong></p>
+                            <p>Một tính năng nhỏ -> Thành sản phẩm chính.</p>
+                            <hr style="margin: 15px 0; border: 0; border-top: 1px dashed #bfdbfe;">
+                            <p><strong>Ví dụ Flickr:</strong></p>
+                            <p>Tính năng chia sẻ ảnh trong Game -> Tách ra thành Mạng xã hội ảnh.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="border-top: 8px solid var(--accent); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+                        <h3 style="font-size: 5rem; margin-bottom: 1rem;">🎯</h3>
+                        <h3 style="color: var(--accent); font-size: 2.5rem; text-transform: uppercase; line-height: 1.2;">Customer<br>Pivot</h3>
+                        <p style="font-size: 1.5rem; font-style: italic; color: #64748b; margin-bottom: 2rem;">"Đúng thuốc, sai người"</p>
+                        
+                        <div style="background: #fff7ed; padding: 20px; border-radius: 10px; width: 100%;">
+                            <p style="font-size: 1.2rem;"><strong>Cơ chế:</strong></p>
+                            <p>Sản phẩm tốt -> Nhưng bán sai đối tượng.</p>
+                            <hr style="margin: 15px 0; border: 0; border-top: 1px dashed #fed7aa;">
+                            <p><strong>Ví dụ:</strong></p>
+                            <p>Phần mềm quản lý tài chính: Bán cho Sinh viên (Thất bại) -> Bán cho Doanh nghiệp (Thành công).</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <a href="#slide-12" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-12" style="background: black; color: white; text-align: center;">
+        <div class="container center">
+            <span class="part-label">TỔNG KẾT</span>
+            <div style="margin-bottom: 3rem;">
+                <p style="font-family: 'Montserrat'; font-size: 3rem; font-style: italic; line-height: 1.3;">
+                    "Thất bại duy nhất là<br> <span style="color: var(--accent);">thất bại trong việc học hỏi</span>."
+                </p>
+                <p style="margin-top: 20px; font-size: 1.5rem;">- Eric Ries -</p>
+            </div>
+            
+            <div style="background: white; padding: 15px; display: inline-block; border-radius: 10px;">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://leanstartup.co/" alt="QR Code" style="width: 150px; height: 150px; box-shadow: none; border-radius: 0;">
+                <p style="color: black; font-size: 0.9rem; margin-top: 5px; margin-bottom: 0;">Tài liệu tham khảo</p>
+            </div>
+        </div>
+        <a href="#slide-13" class="next-btn">▼</a>
+    </section>
+
+    <section id="slide-13" style="background: var(--bg-dark); color: white; text-align: center;">
+        <div class="container center">
+            <h1 style="font-size: 5rem; color: var(--accent);">THINK BIG</h1>
+            <h1>START SMALL</h1>
+            <h1 style="color: var(--primary);">SCALE FAST</h1>
+            <br><br>
+            <p style="font-size: 1.5rem;">Cảm ơn Cô và các bạn đã lắng nghe.</p>
+            <br><br>
+            <a href="#slide-1" style="color: #fff; text-decoration: none; border: 1px solid #fff; padding: 10px 20px; border-radius: 5px; font-size: 1rem; opacity: 0.7;">Quay lại đầu trang ▲</a>
+        </div>
+    </section>
+
+    <script>
+        const progressBar = document.getElementById('progressBar');
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            progressBar.style.width = scrolled + "%";
+        });
+    </script>
+</body>
+</html>
